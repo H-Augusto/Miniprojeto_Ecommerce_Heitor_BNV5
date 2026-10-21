@@ -1,6 +1,6 @@
 import { Produto } from './types';
 
-const produtos: Produto[] = [];
+const produtos: Produto[] = [{ id: 1, nome: "Mouse", categoria: "Periféricos", preco: 50, estoque: 10 },];
 export function cadastroProduto(produto: Produto): void {
     
     // validações (id, nome, preço, estoque)
@@ -40,6 +40,7 @@ export function atualizarProduto(id: number, produtoAtualizado: Produto): void{
     
 }
 
-export function deletarProduto(id: number): void {
+// export function deletarProduto(id: number): void {
     
-}
+// }
+
