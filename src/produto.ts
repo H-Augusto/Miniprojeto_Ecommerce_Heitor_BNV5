@@ -1,6 +1,7 @@
 import { Produto } from './types';
 
 const produtos: Produto[] = [{ id: 1, nome: "Mouse", categoria: "Periféricos", preco: 50, estoque: 10 },];
+
 export function cadastroProduto(produto: Produto): void {
     
     // validações (id, nome, preço, estoque)
@@ -11,11 +12,11 @@ export function cadastroProduto(produto: Produto): void {
     else if (produto.nome.trim() === '') {
         throw new Error('O nome do produto não pode ser vazio');
     }
-    else if (produto.preco < 0) {
+    else if (produto.preco <= 0) {
         throw new Error('O preço do produto deve ser positivo');
     }
-    else if (produto.estoque < 0) {
-        throw new Error('O estoque do produto esta negativo');
+    else if (produto.estoque === 0) {
+        throw new Error('O estoque do produto deve ser positivo');
     }
     produtos.push(produto);
 }
@@ -36,11 +37,25 @@ export function filtrarPrCategoria(categoria: string): Produto[] {
     return produtos.filter(produto => produto.categoria.toLowerCase() === categoria.toLowerCase());
 }
 
-export function atualizarProduto(id: number, produtoAtualizado: Produto): void{
-    
+export function atualizarProduto(id: number, produtoAtualizado: Produto): void {
+    const indice = produtos.findIndex(produto => produto.id === id);
+    if (indice === -1) {
+        throw new Error('Produto não encontrado');
+    }
+    if (produtoAtualizado.id !== id) {
+        throw new Error('Não é permitido alterar o id do produto');
+    }
+        cadastroProduto(produtoAtualizado);
+    produtos[indice] = produtoAtualizado;
 }
 
-// export function deletarProduto(id: number): void {
-    
-// }
+export function deletarProduto(id: number): void {
+        const indice = produtos.findIndex(produto => produto.id === id);
+        if (indice === -1) {
+            throw new Error('Produto não encontrado');
+        }
+        produtos.splice(indice, 1);
+}
+
+
 
