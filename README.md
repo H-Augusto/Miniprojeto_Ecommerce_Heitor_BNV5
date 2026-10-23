@@ -30,9 +30,6 @@ Sistema de gerenciamento de e-commerce em TypeScript e Node.js, executado pelo t
 - Consultar todos os pedidos e os pedidos de um cliente
 - Baixa automática do estoque após a compra
 
-**Relatórios**
-- Quantidade de pedidos, faturamento total e estoque atual
-
 ## Tecnologias utilizadas
 
 - TypeScript
