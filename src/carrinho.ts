@@ -3,7 +3,6 @@ import { buscarProdutoId } from './produto';
 
 const carrinho: itemCarrinho[] = [];
 
-// Valida produto
 function validarQuantidade(produtoId: number, quantidade: number): void {
     const produto = buscarProdutoId(produtoId);
     if (!produto) {
@@ -18,18 +17,15 @@ function validarQuantidade(produtoId: number, quantidade: number): void {
 }
 
 export function adicionarCarrinho(item: itemCarrinho): void {
-    // Barra quantidade inválida
     validarQuantidade(item.produtoId, item.quantidade);
 
     const existente = carrinho.find(
         i => i.produtoId === item.produtoId && i.clienteId === item.clienteId
     );
-
     const quantidadeFinal = existente
         ? existente.quantidade + item.quantidade
         : item.quantidade;
 
-    // Validacao total do estoque
     validarQuantidade(item.produtoId, quantidadeFinal);
 
     if (existente) {
@@ -39,7 +35,7 @@ export function adicionarCarrinho(item: itemCarrinho): void {
     }
 }
 
-// Substitui a antiga quantidade por uma nova no carrinho.
+// item.quantidade é a nova quantidade (substitui a antiga)
 export function alterarCarrinho(item: itemCarrinho): void {
     const indice = carrinho.findIndex(
         i => i.produtoId === item.produtoId && i.clienteId === item.clienteId
@@ -47,7 +43,40 @@ export function alterarCarrinho(item: itemCarrinho): void {
     if (indice === -1) {
         throw new Error('Item não encontrado no carrinho');
     }
-
     validarQuantidade(item.produtoId, item.quantidade);
     carrinho[indice].quantidade = item.quantidade;
+}
+
+export function removerDoCarrinho(clienteId: number, produtoId: number): void {
+    const indice = carrinho.findIndex(
+        i => i.produtoId === produtoId && i.clienteId === clienteId
+    );
+    if (indice === -1) {
+        throw new Error('Item não encontrado no carrinho');
+    }
+    carrinho.splice(indice, 1);
+}
+
+export function listarCarrinho(clienteId: number): itemCarrinho[] {
+    return carrinho.filter(item => item.clienteId === clienteId);
+}
+
+export function calcularSubtotal(item: itemCarrinho): number {
+    const produto = buscarProdutoId(item.produtoId);
+    if (!produto) {
+        throw new Error('Produto não encontrado');
+    }
+    return produto.preco * item.quantidade;
+}
+
+export function calcularTotal(clienteId: number): number {
+    return listarCarrinho(clienteId).reduce((total, item) => total + calcularSubtotal(item), 0);
+}
+
+export function limparCarrinho(clienteId: number): void {
+    for (let i = carrinho.length - 1; i >= 0; i--) {
+        if (carrinho[i].clienteId === clienteId) {
+            carrinho.splice(i, 1);
+        }
+    }
 }
